@@ -54,6 +54,8 @@ class NeverEmailPasswords
      */
     protected function updateUserActivationKey()
     {
+        global $wpdb;
+
         if (!$this->userData) {
             return false;
         }
