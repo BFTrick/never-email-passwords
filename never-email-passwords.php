@@ -26,10 +26,10 @@ function nep_user_register( $user_id ) {
 
     $wpdb->update($wpdb->users, array('user_activation_key' => $key), array('user_login' => $user_data->user_login));
 
-  $blog_name = get_bloginfo('name');
-  $subject = "Update your $blog_name password";
-  $body = nep_message_body( $blog_name ) .
-    network_site_url("wp-login.php?action=rp&key=$key&login=" . rawurlencode($user_data->user_login), 'login');
+    $blog_name = get_bloginfo('name');
+    $subject = "Please set your $blog_name password";
+    $body = nep_message_body( $blog_name ) .
+        network_site_url("wp-login.php?action=rp&key=$key&login=" . rawurlencode($user_data->user_login), 'login');
 
     if ( ! wp_mail($user_data->user_email, $subject, $body) ) {
         error_log( sprintf("Failed sending email to <$user_data->user_email>:\n$subject\n$body") );
@@ -47,9 +47,11 @@ function nep_remove_email_checkbox() {
 }
 
 function nep_message_body( $blog_name ) {
-  return <<<EOB
-A site administrator has created an account for you at $blog_name. If you did not request this, you can safely ignore this message. Otherwise, please click on the following link to set your password.
+    return <<<EOB
+An account has been created for you at $blog_name, you need to set a password
+for this account before it can be used.
 
+Click here to set this password, otherwise ignore this message:
 EOB;
 }
-?>
+
