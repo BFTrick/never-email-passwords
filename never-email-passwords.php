@@ -7,28 +7,45 @@
  * Description: Send new users a reset password link when their account is created.
  */
 
-add_action('user_register', 'nep_user_register');
-add_action('admin_print_scripts', 'nep_remove_email_checkbox');
+$nep = new NeverEmailPasswords();
+$nep->registerHooks();
 
+class NeverEmailPasswords
+{
+    public function registerHooks()
+    {
+        add_action('user_register', 'nep_user_register');
+        add_action('admin_print_scripts', 'nep_remove_email_checkbox');
+    }
+
+    public function reportError($message, $arguments)
+    {
+        error_log(
+            'NeverEmailPasswords: '
+            . vsprintf($message, $arguments)
+        );
+    }
+}
 
 function nep_user_register($user_id)
 {
     global $wpdb;
+    $nep = new NeverEmailPasswords;
 
     $user_data = get_userdata($user_id);
 
     if (is_wp_error($user_data)) {
-        error_log(
-            sprintf(
-                "NeverEmailPasswords:nep_user_register error from get_userdata( %s ): %s",
+        $nep->reportError(
+            'user_register error grom get_user_data(%s): %s',
+            array(
                 $user_id,
                 $user_data->get_error_message()
             )
         );
+
         return false;
     }
 
-    // code lifted from wp-login.php:retrieve_password()
     $key = wp_generate_password(20, false);
 
     $wpdb->update(
@@ -45,23 +62,21 @@ function nep_user_register($user_id)
     );
 
     if (!wp_mail($user_data->user_email, $subject, $body)) {
-        error_log(
-            sprintf(
-                "Failed sending email to <%s>:\n%s\n%s",
+        $nep->reportError(
+            'Failed sending email to <%s>: %s',
+            array(
                 $user_data->user_email,
-                $subject,
-                $body
+                $subject
             )
         );
         return false;
     }
 
-    error_log(
-        sprintf(
-            "Sent password reset link to %s",
-            $user_data->user_login
-       )
+    $nep->reportError(
+        'Successfully sent password reset link to %s',
+        array($user_data->user_email)
     );
+
     return true;
 }
 
