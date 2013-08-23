@@ -39,6 +39,10 @@ class NeverEmailPasswords
 
     public function handleActivationRequest($user_id)
     {
+        // only run on the admin pages so you don't disable 3rd party functionality
+        if (!is_admin()) {
+            return false;
+        }
         if (!$this->setUserDataById($user_id)) {
             return false;
         }
