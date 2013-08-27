@@ -22,8 +22,10 @@ class NeverEmailPasswords
 
     public function registerUIHooks()
     {
-        if (IS_PROFILE_PAGE === true) {
-          return false;
+        if (defined('IS_PROFILE_PAGE')) {
+          if(IS_PROFILE_PAGE === true) {
+            return false;
+          }
         }
 
         $password = wp_generate_password(64, false);
