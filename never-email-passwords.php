@@ -2,7 +2,7 @@
 /*
  * Plugin Name: NeverEmailPasswords
  * Plugin URI: http://zippykid.com/plugins/never-email-passwords
- * Version: 0.1
+ * Version: 0.2
  * Author: ZippyKid
  * Description: Send new users a reset password link when their account is created.
  */
