@@ -22,7 +22,7 @@ class NeverEmailPasswords
 
     public function registerUIHooks()
     {
-        $password = wp_generate_password(64, false);
+        //$password = wp_generate_password(64, false);
         wp_enqueue_script(
             'nep_remove_email_checkbox',
             plugins_url('/js/nep_remove_email_checkbox.js', __FILE__),
@@ -32,8 +32,8 @@ class NeverEmailPasswords
         );
         wp_localize_script(
             'nep_remove_email_checkbox',
-            'NeverEmailPasswords',
-            array('password' => $password)
+            'NeverEmailPasswords'
+            //array('password' => $password)
         );
     }
 
