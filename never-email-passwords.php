@@ -22,6 +22,12 @@ class NeverEmailPasswords
 
     public function registerUIHooks()
     {
+        if (defined('IS_PROFILE_PAGE')) {
+          if(IS_PROFILE_PAGE === true) {
+            return false;
+          }
+        }
+
         $password = wp_generate_password(64, false);
         wp_enqueue_script(
             'nep_remove_email_checkbox',
